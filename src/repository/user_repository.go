@@ -8,6 +8,10 @@ import (
 	"github.com/AntonioDaria/surfe/src/models"
 )
 
+var ErrUserNotFound = fmt.Errorf("user not found")
+
+//go:generate mockgen -source=$GOFILE -destination=mock/repository_mock.go -package=mock
+
 type Repository interface {
 	GetUserByID(userID int) (*models.User, error)
 }
