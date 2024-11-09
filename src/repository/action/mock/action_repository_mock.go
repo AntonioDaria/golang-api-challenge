@@ -46,3 +46,17 @@ func (mr *MockRepositoryMockRecorder) CountActionsByUserID(userID interface{}) *
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountActionsByUserID", reflect.TypeOf((*MockRepository)(nil).CountActionsByUserID), userID)
 }
+
+// UserExists mocks base method.
+func (m *MockRepository) UserExists(userID int) bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UserExists", userID)
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// UserExists indicates an expected call of UserExists.
+func (mr *MockRepositoryMockRecorder) UserExists(userID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserExists", reflect.TypeOf((*MockRepository)(nil).UserExists), userID)
+}

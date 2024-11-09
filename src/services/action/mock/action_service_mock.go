@@ -33,16 +33,17 @@ func (m *MockService) EXPECT() *MockServiceMockRecorder {
 	return m.recorder
 }
 
-// CountActionsByUserID mocks base method.
-func (m *MockService) CountActionsByUserID(userID int) int {
+// GetActionCountByUserID mocks base method.
+func (m *MockService) GetActionCountByUserID(userID int) (int, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CountActionsByUserID", userID)
+	ret := m.ctrl.Call(m, "GetActionCountByUserID", userID)
 	ret0, _ := ret[0].(int)
-	return ret0
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
-// CountActionsByUserID indicates an expected call of CountActionsByUserID.
-func (mr *MockServiceMockRecorder) CountActionsByUserID(userID interface{}) *gomock.Call {
+// GetActionCountByUserID indicates an expected call of GetActionCountByUserID.
+func (mr *MockServiceMockRecorder) GetActionCountByUserID(userID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountActionsByUserID", reflect.TypeOf((*MockService)(nil).CountActionsByUserID), userID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetActionCountByUserID", reflect.TypeOf((*MockService)(nil).GetActionCountByUserID), userID)
 }

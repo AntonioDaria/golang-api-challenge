@@ -8,9 +8,12 @@ import (
 	"github.com/AntonioDaria/surfe/src/models"
 )
 
+var ErrUserNotFound = fmt.Errorf("user not found")
+
 //go:generate mockgen -source=$GOFILE -destination=mock/action_repository_mock.go -package=mock
 type Repository interface {
 	CountActionsByUserID(userID int) int
+	UserExists(userID int) bool
 }
 
 type RepositoryImpl struct {
@@ -41,4 +44,14 @@ func (r *RepositoryImpl) CountActionsByUserID(userID int) int {
 		}
 	}
 	return count
+}
+
+// UserExists checks if a user has performed any actions
+func (r *RepositoryImpl) UserExists(userID int) bool {
+	for _, action := range r.actions {
+		if action.UserID == userID {
+			return true
+		}
+	}
+	return false
 }

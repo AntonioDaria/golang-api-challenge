@@ -1,10 +1,12 @@
 package services
 
-import "github.com/AntonioDaria/surfe/src/repository/action"
+import (
+	"github.com/AntonioDaria/surfe/src/repository/action"
+)
 
 //go:generate mockgen -source=$GOFILE -destination=mock/action_service_mock.go -package=mock
 type Service interface {
-	CountActionsByUserID(userID int) int
+	GetActionCountByUserID(userID int) (int, error)
 }
 
 type ServiceImpl struct {
@@ -16,6 +18,11 @@ func NewActionService(actionRepo action.Repository) *ServiceImpl {
 }
 
 // CountActionsByUserID counts the number of actions performed by a user
-func (s *ServiceImpl) CountActionsByUserID(userID int) int {
-	return s.actionRepo.CountActionsByUserID(userID)
+func (s *ServiceImpl) GetActionCountByUserID(userID int) (int, error) {
+	if !s.actionRepo.UserExists(userID) {
+		return 0, action.ErrUserNotFound
+	}
+
+	// Get the action count if the user exists
+	return s.actionRepo.CountActionsByUserID(userID), nil
 }
