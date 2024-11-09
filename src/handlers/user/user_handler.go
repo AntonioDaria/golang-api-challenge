@@ -39,6 +39,6 @@ func (h *Handler) GetUserByIDHandler(c *fiber.Ctx) error {
 	return c.JSON(UserResponse{
 		ID:        user.ID,
 		Name:      user.Name,
-		CreatedAt: user.CreatedAt.String(),
+		CreatedAt: user.CreatedAt.Format("2006-01-02T15:04:05.000Z"),
 	})
 }
