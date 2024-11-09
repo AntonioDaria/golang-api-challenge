@@ -1,12 +1,12 @@
 package router
 
 import (
-	"github.com/AntonioDaria/surfe/src/handlers"
+	"github.com/AntonioDaria/surfe/src/handlers/user"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
-func New() *fiber.App {
+func New(userHandler *user.Handler) *fiber.App {
 	router := fiber.New()
 
 	// Add Recover middleware to handle panics
@@ -14,6 +14,7 @@ func New() *fiber.App {
 		EnableStackTrace: true,
 	}))
 
-	router.Get("/health", handlers.HealthCheckHandler) // Register health check endpoint
+	// User endpoint
+	router.Get("/user/:id", userHandler.GetUserByIDHandler)
 	return router
 }

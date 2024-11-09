@@ -8,7 +8,7 @@ import (
 	"github.com/AntonioDaria/surfe/src/models"
 )
 
-var ErrUserNotFound = fmt.Errorf("user not found")
+var ErrUserNotFound = fmt.Errorf("user with ID %d not found")
 
 //go:generate mockgen -source=$GOFILE -destination=mock/repository_mock.go -package=mock
 
@@ -42,5 +42,5 @@ func (r *RepositoryImpl) GetUserByID(userID int) (*models.User, error) {
 			return &user, nil
 		}
 	}
-	return nil, fmt.Errorf("user with ID %d not found", userID)
+	return nil, ErrUserNotFound
 }
