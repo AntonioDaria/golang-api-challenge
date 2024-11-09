@@ -1,10 +1,11 @@
 package user
 
 import (
+	"errors"
 	"strconv"
 
 	"github.com/AntonioDaria/surfe/src/handlers/utils"
-	not_found_err "github.com/AntonioDaria/surfe/src/repository"
+	"github.com/AntonioDaria/surfe/src/repository/user"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -25,9 +26,9 @@ func (h *Handler) GetUserByIDHandler(c *fiber.Ctx) error {
 	}
 
 	// Retrieve the user using the service layer
-	user, err := h.userService.GetUserByID(userID)
+	found_user, err := h.userService.GetUserByID(userID)
 	if err != nil {
-		if err == not_found_err.ErrUserNotFound {
+		if errors.Is(err, user.ErrUserNotFound) {
 			h.logger.Error().Err(err).Msg("User not found")
 			return utils.JsonError(c, fiber.StatusNotFound, "User not found")
 		}
@@ -37,8 +38,8 @@ func (h *Handler) GetUserByIDHandler(c *fiber.Ctx) error {
 
 	// Return the user as JSON if found
 	return c.JSON(UserResponse{
-		ID:        user.ID,
-		Name:      user.Name,
-		CreatedAt: user.CreatedAt.Format("2006-01-02T15:04:05.000Z"),
+		ID:        found_user.ID,
+		Name:      found_user.Name,
+		CreatedAt: found_user.CreatedAt.Format("2006-01-02T15:04:05.000Z"),
 	})
 }

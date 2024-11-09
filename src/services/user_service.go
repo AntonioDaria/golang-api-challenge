@@ -2,7 +2,7 @@ package services
 
 import (
 	"github.com/AntonioDaria/surfe/src/models"
-	"github.com/AntonioDaria/surfe/src/repository"
+	"github.com/AntonioDaria/surfe/src/repository/user"
 )
 
 //go:generate mockgen -source=$GOFILE -destination=mock/services_mock.go -package=mock
@@ -12,10 +12,10 @@ type Service interface {
 }
 
 type ServiceImpl struct {
-	userRepo repository.Repository
+	userRepo user.Repository
 }
 
-func NewUserService(userRepo repository.Repository) *ServiceImpl {
+func NewUserService(userRepo user.Repository) *ServiceImpl {
 	return &ServiceImpl{userRepo: userRepo}
 }
 

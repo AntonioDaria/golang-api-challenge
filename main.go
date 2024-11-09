@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/AntonioDaria/surfe/src/handlers/user"
-	"github.com/AntonioDaria/surfe/src/repository"
+	user_repo "github.com/AntonioDaria/surfe/src/repository/user"
 	"github.com/AntonioDaria/surfe/src/router"
 	"github.com/AntonioDaria/surfe/src/server"
 	"github.com/AntonioDaria/surfe/src/services"
@@ -17,7 +17,7 @@ func main() {
 	logger := zerolog.New(os.Stderr).Level(zerolog.DebugLevel).With().Timestamp().Logger()
 
 	// Load User JSON data
-	userRepo, err := repository.NewUserRepo("./src/repository/data/users.json")
+	userRepo, err := user_repo.NewUserRepo("./src/repository/data/users.json")
 	if err != nil {
 		logger.Fatal().Err(err).Msg("Failed to load user data")
 	}

@@ -1,4 +1,4 @@
-package repository
+package user
 
 import (
 	"testing"
@@ -8,7 +8,7 @@ import (
 
 func Test_GetUserByID(t *testing.T) {
 	// Arrange
-	userRepo, err := NewUserRepo("./data/users.json")
+	userRepo, err := NewUserRepo("../data/users.json")
 	if err != nil {
 		t.Fatalf("failed to create user repository: %v", err)
 	}

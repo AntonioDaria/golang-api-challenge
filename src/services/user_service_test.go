@@ -7,7 +7,7 @@ import (
 
 	"testing"
 
-	er "github.com/AntonioDaria/surfe/src/repository"
+	"github.com/AntonioDaria/surfe/src/repository/user"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )
@@ -42,12 +42,12 @@ func TestGetUserByID_UserNotFound(t *testing.T) {
 	userService := NewUserService(userRepo)
 
 	// Define expected behavior for GetUserByID
-	userRepo.EXPECT().GetUserByID(1).Return(nil, er.ErrUserNotFound)
+	userRepo.EXPECT().GetUserByID(1).Return(nil, user.ErrUserNotFound)
 
 	// Act
-	user, err := userService.GetUserByID(1)
+	found_user, err := userService.GetUserByID(1)
 
 	// Assert
-	assert.ErrorIs(t, err, er.ErrUserNotFound)
-	assert.Nil(t, user)
+	assert.ErrorIs(t, err, user.ErrUserNotFound)
+	assert.Nil(t, found_user)
 }
