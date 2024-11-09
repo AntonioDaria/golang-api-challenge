@@ -10,8 +10,9 @@ import (
 	"time"
 
 	"github.com/AntonioDaria/surfe/src/models"
-	"github.com/AntonioDaria/surfe/src/services"
-	"github.com/AntonioDaria/surfe/src/services/mock"
+	user_s "github.com/AntonioDaria/surfe/src/services/user"
+	user_mock "github.com/AntonioDaria/surfe/src/services/user/mock"
+
 	"github.com/rs/zerolog"
 
 	"github.com/AntonioDaria/surfe/src/repository/user"
@@ -27,7 +28,7 @@ func TestGetUserByIDHandler_Success(t *testing.T) {
 	defer ctrl.Finish()
 
 	// Set up mock service
-	mockService := mock.NewMockService(ctrl)
+	mockService := user_mock.NewMockService(ctrl)
 	handler := NewHandler(mockService, logger)
 
 	// Set up test data
@@ -54,7 +55,7 @@ func TestGetUserByIDHandler_NotFound(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockService := mock.NewMockService(ctrl)
+	mockService := user_mock.NewMockService(ctrl)
 	handler := NewHandler(mockService, logger)
 
 	// Simulate user not found error
@@ -75,7 +76,7 @@ func TestGetUserByIDHandler_BadRequest(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockService := mock.NewMockService(ctrl)
+	mockService := user_mock.NewMockService(ctrl)
 	handler := NewHandler(mockService, logger)
 
 	app := fiber.New()
@@ -93,7 +94,7 @@ func TestGetUserByIDHandler_InternalServerError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockService := mock.NewMockService(ctrl)
+	mockService := user_mock.NewMockService(ctrl)
 	handler := NewHandler(mockService, logger)
 
 	// Simulate internal server error
@@ -118,7 +119,7 @@ func TestGetUserByIDIntegration(t *testing.T) {
 	}
 
 	// Set up service and handler
-	userService := services.NewUserService(userRepo)
+	userService := user_s.NewUserService(userRepo)
 	userHandler := NewHandler(userService, logger)
 
 	// Create a new Fiber app and register the route

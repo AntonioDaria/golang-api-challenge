@@ -7,7 +7,7 @@ import (
 	user_repo "github.com/AntonioDaria/surfe/src/repository/user"
 	"github.com/AntonioDaria/surfe/src/router"
 	"github.com/AntonioDaria/surfe/src/server"
-	"github.com/AntonioDaria/surfe/src/services"
+	services "github.com/AntonioDaria/surfe/src/services/user"
 
 	"github.com/rs/zerolog"
 )

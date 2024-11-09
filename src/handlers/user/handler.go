@@ -1,16 +1,16 @@
 package user
 
 import (
-	user "github.com/AntonioDaria/surfe/src/services"
+	user_s "github.com/AntonioDaria/surfe/src/services/user"
 	"github.com/rs/zerolog"
 )
 
 type Handler struct {
-	userService user.Service
+	userService user_s.Service
 	logger      zerolog.Logger
 }
 
-func NewHandler(userService user.Service, logger zerolog.Logger) *Handler {
+func NewHandler(userService user_s.Service, logger zerolog.Logger) *Handler {
 	return &Handler{
 		userService: userService,
 		logger:      logger,
