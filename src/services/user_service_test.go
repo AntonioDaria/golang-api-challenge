@@ -3,7 +3,7 @@ package services
 import (
 	"github.com/AntonioDaria/surfe/src/models"
 
-	"github.com/AntonioDaria/surfe/src/repository/mock"
+	"github.com/AntonioDaria/surfe/src/repository/user/mock"
 
 	"testing"
 
