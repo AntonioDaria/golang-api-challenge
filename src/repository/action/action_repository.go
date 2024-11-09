@@ -10,7 +10,7 @@ import (
 
 //go:generate mockgen -source=$GOFILE -destination=mock/action_repository_mock.go -package=mock
 type Repository interface {
-	CountActionsByUserID(userID int) (int, error)
+	CountActionsByUserID(userID int) int
 }
 
 type RepositoryImpl struct {
@@ -33,12 +33,12 @@ func NewActionRepo(filePath string) (*RepositoryImpl, error) {
 }
 
 // CountActionsByUserID counts the number of actions performed by a user
-func (r *RepositoryImpl) CountActionsByUserID(userID int) (int, error) {
+func (r *RepositoryImpl) CountActionsByUserID(userID int) int {
 	count := 0
 	for _, action := range r.actions {
 		if action.UserID == userID {
 			count++
 		}
 	}
-	return count, nil
+	return count
 }

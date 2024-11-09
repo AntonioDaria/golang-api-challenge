@@ -12,13 +12,9 @@ func Test_Count_Actions_By_User_ID(t *testing.T) {
 	}
 
 	// Act
-	actions, err := actionRepo.CountActionsByUserID(1)
+	actions := actionRepo.CountActionsByUserID(1)
 
 	// Assert
-	if err != nil {
-		t.Fatalf("failed to count actions by user ID: %v", err)
-	}
-
 	if actions != 49 {
 		t.Fatalf("expected actions count to be 49, got %d", actions)
 	}
