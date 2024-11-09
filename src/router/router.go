@@ -1,12 +1,18 @@
 package router
 
 import (
+	"github.com/AntonioDaria/surfe/src/handlers/action"
 	"github.com/AntonioDaria/surfe/src/handlers/user"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
-func New(userHandler *user.Handler) *fiber.App {
+type Handlers struct {
+	UserHandler   *user.Handler
+	ActionHandler *action.Handler
+}
+
+func New(handlers *Handlers) *fiber.App {
 	router := fiber.New()
 
 	// Add Recover middleware to handle panics
@@ -15,6 +21,9 @@ func New(userHandler *user.Handler) *fiber.App {
 	}))
 
 	// User endpoint
-	router.Get("/user/:id", userHandler.GetUserByIDHandler)
+	router.Get("/user/:id", handlers.UserHandler.GetUserByIDHandler)
+
+	// Action endpoint
+	router.Get("/users/:id/actions/count", handlers.ActionHandler.GetActionCountByUserIDHandler)
 	return router
 }
