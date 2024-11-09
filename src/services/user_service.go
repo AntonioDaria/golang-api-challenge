@@ -5,6 +5,8 @@ import (
 	"github.com/AntonioDaria/surfe/src/repository"
 )
 
+//go:generate mockgen -source=$GOFILE -destination=mock/services_mock.go -package=mock
+
 type Service interface {
 	GetUserByID(userID int) (*models.User, error)
 }
