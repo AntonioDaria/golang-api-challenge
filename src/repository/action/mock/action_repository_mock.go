@@ -7,6 +7,7 @@ package mock
 import (
 	reflect "reflect"
 
+	models "github.com/AntonioDaria/surfe/src/models"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -45,6 +46,20 @@ func (m *MockRepository) CountActionsByUserID(userID int) int {
 func (mr *MockRepositoryMockRecorder) CountActionsByUserID(userID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountActionsByUserID", reflect.TypeOf((*MockRepository)(nil).CountActionsByUserID), userID)
+}
+
+// GetSortedActions mocks base method.
+func (m *MockRepository) GetSortedActions() []models.Action {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetSortedActions")
+	ret0, _ := ret[0].([]models.Action)
+	return ret0
+}
+
+// GetSortedActions indicates an expected call of GetSortedActions.
+func (mr *MockRepositoryMockRecorder) GetSortedActions() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSortedActions", reflect.TypeOf((*MockRepository)(nil).GetSortedActions))
 }
 
 // UserExists mocks base method.

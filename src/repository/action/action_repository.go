@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"sort"
 
 	"github.com/AntonioDaria/surfe/src/models"
 )
@@ -14,6 +15,7 @@ var ErrUserNotFound = fmt.Errorf("user not found")
 type Repository interface {
 	CountActionsByUserID(userID int) int
 	UserExists(userID int) bool
+	GetSortedActions() []models.Action
 }
 
 type RepositoryImpl struct {
@@ -54,4 +56,21 @@ func (r *RepositoryImpl) UserExists(userID int) bool {
 		}
 	}
 	return false
+}
+
+// GetSortedActions returns all actions sorted by user and timestamp.
+// This allows to analyze the sequence of actions by user.
+func (r *RepositoryImpl) GetSortedActions() []models.Action {
+	sortedActions := make([]models.Action, len(r.actions))
+	copy(sortedActions, r.actions) // Copy to avoid modifying the original slice
+
+	// Sort actions by UserID and then by Timestamp within each UserID
+	sort.Slice(sortedActions, func(i, j int) bool {
+		if sortedActions[i].UserID == sortedActions[j].UserID {
+			return sortedActions[i].CreatedAt.Before(sortedActions[j].CreatedAt)
+		}
+		return sortedActions[i].UserID < sortedActions[j].UserID
+	})
+
+	return sortedActions
 }

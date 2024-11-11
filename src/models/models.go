@@ -9,9 +9,18 @@ type User struct {
 }
 
 type Action struct {
-	ID         int       `json:"id"`
-	Type       string    `json:"type"`
-	UserID     int       `json:"userId"`
-	TargetUser int       `json:"targetUser,omitempty"`
-	CreatedAt  time.Time `json:"createdAt"`
+	ID         int        `json:"id"`
+	Type       ActionType `json:"type"`
+	UserID     int        `json:"userId"`
+	TargetUser int        `json:"targetUser,omitempty"`
+	CreatedAt  time.Time  `json:"createdAt"`
 }
+
+type ActionType string
+
+const (
+	ActionTypeAddContact   ActionType = "ADD_CONTACT"
+	ActionTypeEditContact  ActionType = "EDIT_CONTACT"
+	ActionTypeReferUser    ActionType = "REFER_USER"
+	ActionTypeViewContacts ActionType = "VIEW_CONTACTS"
+)
