@@ -7,6 +7,7 @@ package mock
 import (
 	reflect "reflect"
 
+	models "github.com/AntonioDaria/surfe/src/models"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -46,4 +47,18 @@ func (m *MockService) GetActionCountByUserID(userID int) (int, error) {
 func (mr *MockServiceMockRecorder) GetActionCountByUserID(userID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetActionCountByUserID", reflect.TypeOf((*MockService)(nil).GetActionCountByUserID), userID)
+}
+
+// GetNextActionProbabilities mocks base method.
+func (m *MockService) GetNextActionProbabilities(actionType models.ActionType) map[models.ActionType]float64 {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetNextActionProbabilities", actionType)
+	ret0, _ := ret[0].(map[models.ActionType]float64)
+	return ret0
+}
+
+// GetNextActionProbabilities indicates an expected call of GetNextActionProbabilities.
+func (mr *MockServiceMockRecorder) GetNextActionProbabilities(actionType interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNextActionProbabilities", reflect.TypeOf((*MockService)(nil).GetNextActionProbabilities), actionType)
 }

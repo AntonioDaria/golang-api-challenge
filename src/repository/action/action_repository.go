@@ -19,7 +19,7 @@ type Repository interface {
 }
 
 type RepositoryImpl struct {
-	actions []models.Action
+	Actions []models.Action
 }
 
 // NewActionRepo loads action data from a JSON file and initializes ActionRepo
@@ -34,13 +34,13 @@ func NewActionRepo(filePath string) (*RepositoryImpl, error) {
 		return nil, fmt.Errorf("failed to unmarshal action data: %w", err)
 	}
 
-	return &RepositoryImpl{actions: actions}, nil
+	return &RepositoryImpl{Actions: actions}, nil
 }
 
 // CountActionsByUserID counts the number of actions performed by a user
 func (r *RepositoryImpl) CountActionsByUserID(userID int) int {
 	count := 0
-	for _, action := range r.actions {
+	for _, action := range r.Actions {
 		if action.UserID == userID {
 			count++
 		}
@@ -50,7 +50,7 @@ func (r *RepositoryImpl) CountActionsByUserID(userID int) int {
 
 // UserExists checks if a user has performed any actions
 func (r *RepositoryImpl) UserExists(userID int) bool {
-	for _, action := range r.actions {
+	for _, action := range r.Actions {
 		if action.UserID == userID {
 			return true
 		}
@@ -61,8 +61,8 @@ func (r *RepositoryImpl) UserExists(userID int) bool {
 // GetSortedActions returns all actions sorted by user and timestamp.
 // This allows to analyze the sequence of actions by user.
 func (r *RepositoryImpl) GetSortedActions() []models.Action {
-	sortedActions := make([]models.Action, len(r.actions))
-	copy(sortedActions, r.actions) // Copy to avoid modifying the original slice
+	sortedActions := make([]models.Action, len(r.Actions))
+	copy(sortedActions, r.Actions)
 
 	// Sort actions by UserID and then by Timestamp within each UserID
 	sort.Slice(sortedActions, func(i, j int) bool {

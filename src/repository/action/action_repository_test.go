@@ -157,7 +157,7 @@ func TestRepositoryImpl_GetSortedActions(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := &RepositoryImpl{
-				actions: tt.fields.actions,
+				Actions: tt.fields.actions,
 			}
 			if got := r.GetSortedActions(); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("RepositoryImpl.GetSortedActions() = %v, want %v", got, tt.want)
