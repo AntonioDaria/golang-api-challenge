@@ -1,7 +1,6 @@
 package services
 
 import (
-	"fmt"
 	"math"
 
 	act_type "github.com/AntonioDaria/surfe/src/models"
@@ -37,31 +36,33 @@ func (s *ServiceImpl) GetNextActionProbabilities(actionType act_type.ActionType)
 	nextActionCounts := make(map[act_type.ActionType]int)
 	totalCount := 0
 
-	// Iterate through sorted actions to find each occurrence of actionType
-	for i := 0; i < len(sortedActions)-1; i++ {
+	// Iterate through sorted actions to find occurrences of actionType
+	for i := 0; i < len(sortedActions); i++ {
 		currentAction := sortedActions[i]
-		nextAction := sortedActions[i+1]
 
-		// Check if the current action matches the specified action type and if the next action is from the same user
-		if currentAction.Type == actionType && currentAction.UserID == nextAction.UserID {
-			// Count this next action
-			nextActionCounts[nextAction.Type]++
-			totalCount++
+		// If current action matches actionType, count subsequent actions by the same user
+		if currentAction.Type == actionType {
+			for j := i + 1; j < len(sortedActions); j++ {
+				nextAction := sortedActions[j]
+
+				// Stop counting if we encounter another instance of actionType or a different user
+				if nextAction.UserID != currentAction.UserID || nextAction.Type == actionType {
+					break
+				}
+
+				// Count this next action
+				nextActionCounts[nextAction.Type]++
+				totalCount++
+			}
 		}
 	}
 
-	// Debugging output to verify next action counts and total count
-	fmt.Printf("Final Next Action Counts: %v, Total Count: %d\n", nextActionCounts, totalCount)
-
-	// Calculate probabilities by dividing each next action count by the total count of all next actions
+	// Calculate probabilities by dividing each next action count by the total count
 	probabilities := make(map[act_type.ActionType]float64)
 	for action, count := range nextActionCounts {
 		probability := float64(count) / float64(totalCount)
 		probabilities[action] = math.Round(probability*100) / 100 // rounds to 2 decimal places
 	}
-
-	// Debugging output to check probabilities
-	fmt.Printf("Probabilities: %v\n", probabilities)
 
 	return probabilities
 }

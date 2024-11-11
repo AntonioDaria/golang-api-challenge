@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/AntonioDaria/surfe/src/handlers/utils"
+	"github.com/AntonioDaria/surfe/src/models"
 	"github.com/AntonioDaria/surfe/src/repository/action"
 	"github.com/gofiber/fiber/v2"
 )
@@ -37,4 +38,16 @@ func (h *Handler) GetActionCountByUserIDHandler(c *fiber.Ctx) error {
 
 	// Return the count as JSON if found
 	return c.JSON(ActionCountResponse{Count: count})
+}
+
+type NextActionProbabilitiesResponse struct {
+	Probabilities map[models.ActionType]float64 `json:"probabilities"`
+}
+
+func (h *Handler) GetNextActionProbabilitiesHandler(c *fiber.Ctx) error {
+	actionType := models.ActionType(c.Params("actionType"))
+
+	probabilities := h.actionService.GetNextActionProbabilities(actionType)
+
+	return c.JSON(NextActionProbabilitiesResponse{Probabilities: probabilities})
 }

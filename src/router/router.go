@@ -23,7 +23,9 @@ func New(handlers *Handlers) *fiber.App {
 	// User endpoint
 	router.Get("/user/:id", handlers.UserHandler.GetUserByIDHandler)
 
-	// Action endpoint
+	// Action endpoints
 	router.Get("/users/:id/actions/count", handlers.ActionHandler.GetActionCountByUserIDHandler)
+	router.Get("/actions/:actionType/next", handlers.ActionHandler.GetNextActionProbabilitiesHandler)
+
 	return router
 }
