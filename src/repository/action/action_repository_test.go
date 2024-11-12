@@ -79,6 +79,19 @@ func Test_Get_Sorted_Actions(t *testing.T) {
 	}
 }
 
+func Test_Get_All_Actions(t *testing.T) {
+	// Arrange
+	actionRepo := loadActionRepo(t)
+
+	// Act
+	actions := actionRepo.GetAllActions()
+
+	// Assert
+	if len(actions) != 22938 {
+		t.Fatalf("expected actions count to be 22938, got %d", len(actions))
+	}
+}
+
 func TestRepositoryImpl_GetSortedActions(t *testing.T) {
 	// Define the time format and parse timestamps
 	timeFormat := "2006-01-02T15:04:05Z"

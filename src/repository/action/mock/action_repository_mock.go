@@ -48,6 +48,20 @@ func (mr *MockRepositoryMockRecorder) CountActionsByUserID(userID interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountActionsByUserID", reflect.TypeOf((*MockRepository)(nil).CountActionsByUserID), userID)
 }
 
+// GetAllActions mocks base method.
+func (m *MockRepository) GetAllActions() []models.Action {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllActions")
+	ret0, _ := ret[0].([]models.Action)
+	return ret0
+}
+
+// GetAllActions indicates an expected call of GetAllActions.
+func (mr *MockRepositoryMockRecorder) GetAllActions() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllActions", reflect.TypeOf((*MockRepository)(nil).GetAllActions))
+}
+
 // GetSortedActions mocks base method.
 func (m *MockRepository) GetSortedActions() []models.Action {
 	m.ctrl.T.Helper()

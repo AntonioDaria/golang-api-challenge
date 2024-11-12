@@ -16,6 +16,7 @@ type Repository interface {
 	CountActionsByUserID(userID int) int
 	UserExists(userID int) bool
 	GetSortedActions() []models.Action
+	GetAllActions() []models.Action
 }
 
 type RepositoryImpl struct {
@@ -73,4 +74,9 @@ func (r *RepositoryImpl) GetSortedActions() []models.Action {
 	})
 
 	return sortedActions
+}
+
+// GetAllActions returns all actions
+func (r *RepositoryImpl) GetAllActions() []models.Action {
+	return r.Actions
 }
