@@ -62,3 +62,17 @@ func (mr *MockServiceMockRecorder) GetNextActionProbabilities(actionType interfa
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNextActionProbabilities", reflect.TypeOf((*MockService)(nil).GetNextActionProbabilities), actionType)
 }
+
+// GetReferralIndex mocks base method.
+func (m *MockService) GetReferralIndex() map[int]int {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetReferralIndex")
+	ret0, _ := ret[0].(map[int]int)
+	return ret0
+}
+
+// GetReferralIndex indicates an expected call of GetReferralIndex.
+func (mr *MockServiceMockRecorder) GetReferralIndex() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetReferralIndex", reflect.TypeOf((*MockService)(nil).GetReferralIndex))
+}

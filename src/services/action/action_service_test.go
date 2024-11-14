@@ -159,3 +159,76 @@ func TestServiceImpl_GetNextActionProbabilities(t *testing.T) {
 		})
 	}
 }
+
+func TestServiceImpl_GetReferralIndex(t *testing.T) {
+	// Mock data to create a referral chain
+	actionRepo := &action.RepositoryImpl{
+		Actions: []models.Action{
+			{ID: 1, UserID: 1, Type: act_type.ActionTypeReferUser, TargetUser: 2},
+			{ID: 2, UserID: 1, Type: act_type.ActionTypeReferUser, TargetUser: 3},
+			{ID: 3, UserID: 2, Type: act_type.ActionTypeReferUser, TargetUser: 4},
+			{ID: 4, UserID: 3, Type: act_type.ActionTypeReferUser, TargetUser: 5},
+			// Expected: User 1 should have a referral index of 4 (2, 3, 4, 5)
+		},
+	}
+
+	actionService := &ServiceImpl{
+		actionRepo: actionRepo,
+	}
+
+	// Call the service function directly
+	referralIndex := actionService.GetReferralIndex()
+
+	// Assert expected referral indices
+	assert.Equal(t, 4, referralIndex[1]) // User 1 referred 2, 3, 4, 5
+	assert.Equal(t, 1, referralIndex[2]) // User 2 referred 4
+	assert.Equal(t, 1, referralIndex[3]) // User 3 referred 5
+	assert.Equal(t, 0, referralIndex[4]) // User 4 has no referrals
+	assert.Equal(t, 0, referralIndex[5]) // User 5 has no referrals
+}
+
+func TestServiceImpl_GetReferralIndex_No_Referrals(t *testing.T) {
+	// Mock data with no referral actions
+	actionRepo := &action.RepositoryImpl{
+		Actions: []models.Action{
+			{ID: 1, UserID: 1, Type: act_type.ActionTypeAddContact},
+			{ID: 2, UserID: 2, Type: act_type.ActionTypeViewContacts},
+		},
+	}
+
+	actionService := &ServiceImpl{
+		actionRepo: actionRepo,
+	}
+
+	// Call the service function directly
+	referralIndex := actionService.GetReferralIndex()
+
+	// Assert no referrals
+	assert.Equal(t, 0, referralIndex[1])
+	assert.Equal(t, 0, referralIndex[2])
+}
+
+func TestServiceImpl_GetReferralIndex_Circular_Referral(t *testing.T) {
+	// Mock data to create a circular referral chain
+	actionRepo := &action.RepositoryImpl{
+		Actions: []models.Action{
+			{ID: 1, UserID: 1, Type: act_type.ActionTypeReferUser, TargetUser: 2},
+			{ID: 2, UserID: 2, Type: act_type.ActionTypeReferUser, TargetUser: 3},
+			{ID: 3, UserID: 3, Type: act_type.ActionTypeReferUser, TargetUser: 1},
+			// Expected: Circular referral chain, all users have a referral index of 1
+		},
+	}
+
+	actionService := &ServiceImpl{
+		actionRepo: actionRepo,
+	}
+
+	// Call the service function directly
+	referralIndex := actionService.GetReferralIndex()
+
+	// Assert expected referral indices for a circular referral chain
+	assert.Equal(t, 2, referralIndex[1]) // User 1 has 2 indirect referrals (2 and 3)
+	assert.Equal(t, 2, referralIndex[2]) // User 2 has 2 indirect referrals (3 and 1)
+	assert.Equal(t, 2, referralIndex[3]) // User 3 has 2 indirect referrals (1 and 2)
+
+}

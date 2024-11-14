@@ -51,3 +51,13 @@ func (h *Handler) GetNextActionProbabilitiesHandler(c *fiber.Ctx) error {
 
 	return c.JSON(NextActionProbabilitiesResponse{Probabilities: probabilities})
 }
+
+type ReferralIndexResponse struct {
+	ReferralIndex map[int]int `json:"referralIndex"`
+}
+
+func (h *Handler) GetReferralIndexHandler(c *fiber.Ctx) error {
+
+	referralIndex := h.actionService.GetReferralIndex()
+	return c.JSON(ReferralIndexResponse{ReferralIndex: referralIndex})
+}

@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"math"
 
 	act_type "github.com/AntonioDaria/surfe/src/models"
@@ -11,6 +12,7 @@ import (
 type Service interface {
 	GetActionCountByUserID(userID int) (int, error)
 	GetNextActionProbabilities(actionType act_type.ActionType) map[act_type.ActionType]float64
+	GetReferralIndex() map[int]int
 }
 
 type ServiceImpl struct {
@@ -65,4 +67,68 @@ func (s *ServiceImpl) GetNextActionProbabilities(actionType act_type.ActionType)
 	}
 
 	return probabilities
+}
+
+func (s *ServiceImpl) GetReferralIndex() map[int]int {
+	// Build an adjacency list from refer actions
+	adjacencyList := make(map[int][]int)
+	for _, action := range s.actionRepo.GetAllActions() {
+		if action.Type == act_type.ActionTypeReferUser {
+			referrer := action.UserID
+			referred := action.TargetUser
+			adjacencyList[referrer] = append(adjacencyList[referrer], referred)
+		}
+	}
+
+	// Final referral index map to store results for each user
+	referralIndex := make(map[int]int)
+	visited := make(map[int]bool)
+	inCycle := make(map[int]bool)
+
+	// DFS function to calculate referral index with cycle detection
+	var dfs func(userID int, path map[int]bool) int
+	dfs = func(userID int, path map[int]bool) int {
+		if path[userID] {
+			// If a node is revisited in the same path, we have a cycle
+			fmt.Printf("Cycle detected for User %d\n", userID)
+			for node := range path {
+				inCycle[node] = true // Mark all nodes in the path as part of a cycle
+			}
+			return 0
+		}
+
+		if visited[userID] {
+			// If already visited and calculated, return the cached result
+			return referralIndex[userID]
+		}
+
+		// Mark this user as visited in the current path
+		path[userID] = true
+		visited[userID] = true
+		count := 0
+
+		// Traverse each referral
+		for _, referred := range adjacencyList[userID] {
+			count += 1 + dfs(referred, path)
+		}
+
+		// Unmark this user from the current path
+		path[userID] = false
+		referralIndex[userID] = count
+		return count
+	}
+
+	// Calculate the referral index for each user
+	for userID := range adjacencyList {
+		if !visited[userID] {
+			dfs(userID, make(map[int]bool))
+		}
+	}
+
+	// Adjust referral indices for nodes in cycles
+	for node := range inCycle {
+		referralIndex[node] = len(inCycle) - 1
+	}
+
+	return referralIndex
 }

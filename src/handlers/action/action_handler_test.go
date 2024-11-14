@@ -261,3 +261,44 @@ func TestGetNextActionProbabilitiesHandler_Integration(t *testing.T) {
 	assert.Equal(t, 0.5, probabilitiesResponse.Probabilities[models.ActionTypeViewContacts])
 	assert.Equal(t, 0.5, probabilitiesResponse.Probabilities[models.ActionTypeEditContact])
 }
+
+func TestGetReferralIndex_Integration(t *testing.T) {
+	// Mock data to create a referral chain
+	actionRepo := &action.RepositoryImpl{
+		Actions: []models.Action{
+			{ID: 1, UserID: 1, Type: models.ActionTypeReferUser, TargetUser: 2},
+			{ID: 2, UserID: 1, Type: models.ActionTypeReferUser, TargetUser: 3},
+			{ID: 3, UserID: 2, Type: models.ActionTypeReferUser, TargetUser: 4},
+			{ID: 4, UserID: 3, Type: models.ActionTypeReferUser, TargetUser: 5},
+			// Expected: User 1 should have a referral index of 4 (2, 3, 4, 5)
+		},
+	}
+
+	actionService := action_s.NewActionService(actionRepo)
+	handler := NewHandler(actionService, zerolog.New(os.Stderr))
+
+	app := fiber.New()
+	app.Get("/actions/referrals", handler.GetReferralIndexHandler)
+
+	// Send request
+	req := httptest.NewRequest(http.MethodGet, "/actions/referrals", nil)
+	resp, _ := app.Test(req, -1)
+
+	// Check response status
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
+
+	// Decode response
+	var referralIndexResponse ReferralIndexResponse
+	err := json.NewDecoder(resp.Body).Decode(&referralIndexResponse)
+	assert.NoError(t, err)
+
+	// Use the decoded map for assertions
+	referralIndex := referralIndexResponse.ReferralIndex
+
+	// Assert expected referral indices
+	assert.Equal(t, 4, referralIndex[1]) // User 1 referred 2, 3, 4, 5
+	assert.Equal(t, 1, referralIndex[2]) // User 2 referred 4
+	assert.Equal(t, 1, referralIndex[3]) // User 3 referred 5
+	assert.Equal(t, 0, referralIndex[4]) // User 4 has no referrals
+	assert.Equal(t, 0, referralIndex[5]) // User 5 has no referrals
+}
