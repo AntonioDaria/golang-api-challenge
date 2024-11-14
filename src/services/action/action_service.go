@@ -1,7 +1,6 @@
 package services
 
 import (
-	"fmt"
 	"math"
 
 	act_type "github.com/AntonioDaria/surfe/src/models"
@@ -90,7 +89,6 @@ func (s *ServiceImpl) GetReferralIndex() map[int]int {
 	dfs = func(userID int, path map[int]bool) int {
 		if path[userID] {
 			// If a node is revisited in the same path, we have a cycle
-			fmt.Printf("Cycle detected for User %d\n", userID)
 			for node := range path {
 				inCycle[node] = true // Mark all nodes in the path as part of a cycle
 			}
